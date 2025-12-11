@@ -3,8 +3,7 @@
 GET http://localhost:4000/api/products
 
 ### Get a single course
-GET http://localhost:4000/api/courses/6935831a3e4de109b63df5f2
-
+GET http://localhost:4000/api/products/693aaabb139619d167fde343
 ### Add a course
 POST http://localhost:4000/api/products
 Content-Type: application/json
@@ -23,3 +22,5 @@ Content-Type: application/json
   }
 }
 
+###
+DELETE http://localhost:4000/api/products/693aa8c08c6f8fb1875de17a

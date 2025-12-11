@@ -23,25 +23,54 @@ const createProduct = async (req, res) => {
   }
 }
 
-// // GET /products/:productId
-// const getProductById = async (req, res) => {
-//   res.send("getProductById");
-// };
+// GET /products/:productId
+const getProductById = async (req, res) => {
+  const { productId } = req.params
 
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    return res.status(400).json({ message: 'Invalid product ID' })
+  }
+
+  try {
+    const product = await Product.findById(productId)
+    if (product) {
+      res.status(200).json(product)
+    } else {
+      res.status(404).json({ message: 'Product not found' })
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve product' })
+  }
+}
 // // PUT /products/:productId
 // const updateProduct = async (req, res) => {
 //   res.send("updateProduct");
 // };
 
-// // DELETE /products/:productId
-// const deleteProduct = async (req, res) => {
-//   res.send("deleteProduct");
-// };
+// DELETE /products/:productId
+const deleteProduct = async (req, res) => {
+  const { productId } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    return res.status(400).json({ message: 'Invalid product ID' })
+  }
+
+  try {
+    const deletedProduct = await Product.findOneAndDelete({ _id: productId })
+    if (deletedProduct) {
+      res.status(204).send() // 204 No Content
+    } else {
+      res.status(404).json({ message: 'Product not found' })
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete product' })
+  }
+}
 
 module.exports = {
   getAllProducts,
-  // getProductById,
+  getProductById,
   createProduct,
   // updateProduct,
-  // deleteProduct,
+  deleteProduct,
 }
