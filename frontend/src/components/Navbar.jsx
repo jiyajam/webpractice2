@@ -4,7 +4,7 @@ const Navbar = () => {
       <h1>Product Search</h1>
       <div className='links'>
         <a href='/'>Home</a>
-        <a href='/add-product'>Add Product</a>
+        <a href='/products/add-product'>Add Product</a>
       </div>
     </nav>
   )
