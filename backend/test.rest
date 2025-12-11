@@ -1,0 +1,25 @@
+###
+### Get all products
+GET http://localhost:4000/api/products
+
+### Get a single course
+GET http://localhost:4000/api/courses/6935831a3e4de109b63df5f2
+
+### Add a course
+POST http://localhost:4000/api/products
+Content-Type: application/json
+
+{
+  "title": "Wireless Bluetooth Headphones",
+  "category": "Electronics",
+  "description": "High-quality over-ear wireless headphones with noise cancellation.",
+  "price": 129.99,
+  "stockQuantity": 50,
+  "supplier": {
+    "name": "TechSupply Co.",
+    "contactEmail": "support@techsupply.com",
+    "contactPhone": "+1-555-123-4567",
+    "rating": 4.5
+  }
+}
+
