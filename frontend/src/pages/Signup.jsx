@@ -2,7 +2,7 @@ import useField from '../hooks/useField'
 import useSignup from '../hooks/useSignup'
 import { useNavigate } from 'react-router-dom'
 
-const Signup = () => {
+const Signup = ({ setIsAuthenticated }) => {
   const navigate = useNavigate()
   const name = useField('text')
   const email = useField('email')
@@ -16,7 +16,8 @@ const Signup = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault()
-    await signup({
+
+    const userData = {
       email: email.value,
       password: password.value,
       name: name.value,
@@ -24,9 +25,14 @@ const Signup = () => {
       gender: gender.value,
       date_of_birth: dateOfBirth.value,
       membership_status: membershipStatus.value,
-    })
-    if (!error) {
-      console.log('success')
+    }
+
+    console.log('Sending signup data:', userData) // ✅ log here
+
+    const success = await signup(userData)
+
+    if (success) {
+      setIsAuthenticated(true)
       navigate('/')
     }
   }

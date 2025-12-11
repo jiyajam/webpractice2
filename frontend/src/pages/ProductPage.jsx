@@ -7,15 +7,23 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const user = JSON.parse(localStorage.getItem('user'))
+  const token = user ? user.token : null
 
   const deleteProduct = async (id) => {
     try {
       const res = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       if (!res.ok) {
-        throw new Error('Failed to delete product')
+        const errorText = await res.text()
+        throw new Error(`Failed to delete product: ${errorText}`)
       }
+      console.log('Product deleted successfully')
+      navigate('/')
     } catch (error) {
       console.error('Error deleting product:', error)
     }

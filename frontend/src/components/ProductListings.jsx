@@ -5,7 +5,7 @@ const ProductListings = ({ products }) => {
     <div className='product-list'>
       {products.map((product) => (
         <div className='product-preview' key={product.id}>
-          <Link to={`/products/${product.id}`}>
+          <Link to={`/products/${product._id}`}>
             <h2>{product.title}</h2>
           </Link>
           <p>Type: {product.category}</p>

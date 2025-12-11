@@ -18,6 +18,8 @@ const EditProductPage = () => {
   const [contactEmail, setContactEmail] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [rating, setRating] = useState(5)
+  const user = JSON.parse(localStorage.getItem('user'))
+  const token = user ? user.token : null
 
   const navigate = useNavigate()
 
@@ -27,6 +29,7 @@ const EditProductPage = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(product),
       })
@@ -91,10 +94,10 @@ const EditProductPage = () => {
 
     const success = await updateProduct(updatedProduct)
     if (success) {
-      // toast.success("Product Updated Successfully");
+      console.log('Prduct Updated Successfully')
       navigate(`/products/${id}`)
     } else {
-      // toast.error("Failed to update the product");
+      console.error('Failed to update the product')
     }
   }
 

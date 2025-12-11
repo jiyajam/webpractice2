@@ -12,8 +12,8 @@ const productSchema = new mongoose.Schema({
     contactPhone: { type: String, required: true },
     rating: { type: Number, min: 1, max: 5 },
   },
+  userId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
 })
-//add  virtual field id
 productSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret) => {

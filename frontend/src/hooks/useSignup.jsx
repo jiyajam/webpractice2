@@ -20,16 +20,16 @@ export default function useSignup(url) {
       if (!response.ok) {
         setError(data.error || 'Signup failed')
         setIsLoading(false)
-        return null
+        return false // ❌ failure
       }
 
       localStorage.setItem('user', JSON.stringify(data))
       setIsLoading(false)
-      return data
+      return true // ✅ success
     } catch (err) {
       setError(err.message || 'Network error')
       setIsLoading(false)
-      return null
+      return false
     }
   }
 

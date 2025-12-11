@@ -1,94 +1,101 @@
-const Product = require('../models/productModel')
 const mongoose = require('mongoose')
+const Product = require('../models/productModel')
 
-//GET / products;
+// Get all products
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({}).sort({ createdAt: -1 })
     res.status(200).json(products)
   } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve products' })
+    console.error('Error fetching products:', error)
+    res.status(500).json({ error: 'Server Error' })
   }
 }
 
-// POST /products
+// Create a new product
 const createProduct = async (req, res) => {
   try {
-    const newProduct = await Product.create({ ...req.body })
+    const userId = req.user._id
+    const newProduct = new Product({
+      ...req.body,
+      userId,
+    })
+    await newProduct.save()
     res.status(201).json(newProduct)
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: 'Failed to create product', error: error.message })
+    console.error('Error creating product:', error)
+    res.status(500).json({ error: 'Server Error' })
   }
 }
 
-// GET /products/:productId
+// Get product by ID
 const getProductById = async (req, res) => {
   const { productId } = req.params
-
   if (!mongoose.Types.ObjectId.isValid(productId)) {
-    return res.status(400).json({ message: 'Invalid product ID' })
+    return res.status(404).json({ error: 'No such product' })
   }
 
   try {
     const product = await Product.findById(productId)
-    if (product) {
-      res.status(200).json(product)
-    } else {
-      res.status(404).json({ message: 'Product not found' })
+    if (!product) {
+      console.log('Product not found')
+      return res.status(404).json({ message: 'Product not found' })
     }
+    res.status(200).json(product)
   } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve product' })
+    console.error('Error fetching product:', error)
+    res.status(500).json({ error: 'Server Error' })
   }
 }
-// PUT /products/:productId
+
+// Update product by ID
 const updateProduct = async (req, res) => {
   const { productId } = req.params
-
   if (!mongoose.Types.ObjectId.isValid(productId)) {
-    return res.status(400).json({ message: 'Invalid product ID' })
+    return res.status(404).json({ error: 'No such product' })
   }
 
   try {
-    const updatedProduct = await Product.findOneAndUpdate(
+    // const user_id = req.user._id;
+    const product = await Product.findOneAndUpdate(
       { _id: productId },
       { ...req.body },
       { new: true }
     )
-    if (updatedProduct) {
-      res.status(200).json(updatedProduct)
-    } else {
-      res.status(404).json({ message: 'Product not found' })
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' })
     }
+    res.status(200).json(product)
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update product' })
+    console.error('Error updating product:', error)
+    res.status(500).json({ error: 'Server Error' })
   }
 }
-// DELETE /products/:productId
+
+// Delete product by ID
 const deleteProduct = async (req, res) => {
   const { productId } = req.params
-
   if (!mongoose.Types.ObjectId.isValid(productId)) {
-    return res.status(400).json({ message: 'Invalid product ID' })
+    return res.status(404).json({ error: 'No such product' })
   }
 
   try {
-    const deletedProduct = await Product.findOneAndDelete({ _id: productId })
-    if (deletedProduct) {
-      res.status(204).send() // 204 No Content
-    } else {
-      res.status(404).json({ message: 'Product not found' })
+    // const user_id = req.user._id;
+    const product = await Product.findOneAndDelete({ _id: productId })
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' })
     }
+    res.status(204).send() // 204 No Content
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete product' })
+    console.error('Error deleting product:', error)
+    res.status(500).json({ error: 'Server Error' })
   }
 }
 
 module.exports = {
   getAllProducts,
-  getProductById,
   createProduct,
+  getProductById,
   updateProduct,
   deleteProduct,
 }
